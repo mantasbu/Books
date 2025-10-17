@@ -2,6 +2,7 @@ package com.mantasbu.books
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavType
@@ -48,9 +49,15 @@ class MainActivity : ComponentActivity() {
                         ),
                     ) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("bookId") ?: return@composable
+                        val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
                         BookDetailsRoute(
                             bookId = id,
-                            onBack = { navController.popBackStack() },
+                            onBack = {
+                                val popped = navController.popBackStack()
+                                if (!popped) {
+                                    onBackPressedDispatcher?.onBackPressed()
+                                }
+                            },
                             onOpenBook = { bid -> navController.navigate("book/$bid") },
                         )
                     }
