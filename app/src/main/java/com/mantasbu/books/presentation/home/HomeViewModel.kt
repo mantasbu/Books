@@ -33,6 +33,8 @@ class HomeViewModel @Inject constructor(
     // keep track of running preview jobs per list to cancel on refresh
     private val previewJobs = mutableMapOf<Int, Job>()
 
+    private var offlineSnackShown = false
+
     init {
         // wire events -> reducers
         viewModelScope.launch {
@@ -89,10 +91,11 @@ class HomeViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    error = res.message, sections = emptyList(),
+                                    error = res.message,
+                                    sections = emptyList(),
                                 )
                             }
-                            _effects.send(HomeEffect.ShowMessage(res.message ?: "Failed to load lists"))
+                            postError(res.message ?: "Failed to load lists")
                         }
 
                         is Resource.Success -> {
@@ -137,8 +140,13 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is Resource.Error -> {
-                            updateSection(listId) { it.copy(isLoading = false, error = res.message) }
-                            _effects.send(HomeEffect.ShowMessage(res.message ?: "Failed to load books"))
+                            updateSection(listId) {
+                                it.copy(
+                                    isLoading = false,
+                                    error = res.message,
+                                )
+                            }
+                            postError(res.message ?: "Failed to load books")
                         }
 
                         is Resource.Success -> {
@@ -161,6 +169,18 @@ class HomeViewModel @Inject constructor(
                 mutable[idx] = transform(mutable[idx])
                 s.copy(sections = mutable)
             }
+        }
+    }
+
+    private fun postError(message: String) {
+        if (message.equals("No internet connection", ignoreCase = true)) {
+            if (offlineSnackShown) {
+                return
+            }
+            offlineSnackShown = true
+        }
+        viewModelScope.launch {
+            _effects.send(HomeEffect.ShowMessage(message))
         }
     }
 }
