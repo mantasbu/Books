@@ -23,8 +23,7 @@ Compose
 
 ### Wireframes:
 
-https://raw.githubusercontent.com/KeskoSenukaiDigital/assignment/main/
-wireframes.png
+https://raw.githubusercontent.com/KeskoSenukaiDigital/assignment/main/wireframes.png
 
 ### APIs:
 
