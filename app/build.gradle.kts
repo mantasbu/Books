@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.android.compiler)
@@ -58,6 +59,8 @@ dependencies {
 
     implementation(libs.bundles.network)
     ksp(libs.moshi.codegen)
+
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
 
