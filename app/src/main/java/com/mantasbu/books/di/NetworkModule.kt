@@ -69,5 +69,5 @@ object NetworkModule {
 
     @Provides
     @BaseUrl
-    fun provideBaseUrl(): String = "https://my-json-server.typicode.com/KeskoSenukaiDigital/assignment"
+    fun provideBaseUrl(): String = "https://my-json-server.typicode.com/KeskoSenukaiDigital/assignment/"
 }
