@@ -20,6 +20,9 @@ Compose
 - MVI Architecture with Kotlin Flow
 - Clean Code with data, domain and presentation layers
 - Retrofit
+- Coil
+- Moshi
+- Room
 
 ### Wireframes:
 
@@ -28,9 +31,12 @@ https://raw.githubusercontent.com/KeskoSenukaiDigital/assignment/main/wireframes
 ### APIs:
 
 - Books: https://my-json-server.typicode.com/KeskoSenukaiDigital/assignment/books
-- Book details: https://my-json-
-server.typicode.com/KeskoSenukaiDigital/assignment/book/{book_id}
+- Book details: https://my-json-server.typicode.com/KeskoSenukaiDigital/assignment/book/{book_id}
 - Lists: https://my-json-server.typicode.com/KeskoSenukaiDigital/assignment/lists
+
+### Bonus feature:
+
+- Stores data in the database and refreshes from the API.
 
 ### Notes:
 
