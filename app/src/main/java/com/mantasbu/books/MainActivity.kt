@@ -4,46 +4,76 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.mantasbu.books.presentation.details.BookDetailsRoute
+import com.mantasbu.books.presentation.home.HomeRoute
+import com.mantasbu.books.presentation.lists.BookListRoute
 import com.mantasbu.books.presentation.ui.theme.BooksTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             BooksTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = "home",
+                ) {
+                    composable("home") {
+                        HomeRoute(
+                            onOpenList = { listId ->
+                                navController.navigate("list/$listId")
+                            },
+                            onOpenBook = { bookId ->
+                                navController.navigate("book/$bookId")
+                            },
+                        )
+                    }
+
+                    composable(
+                        route = "book/{bookId}",
+                        arguments = listOf(
+                            navArgument("bookId") {
+                                type = NavType.IntType
+                            },
+                        ),
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getInt("bookId") ?: return@composable
+                        BookDetailsRoute(
+                            bookId = id,
+                            onBack = { navController.popBackStack() },
+                            onOpenBook = { bid -> navController.navigate("book/$bid") },
+                        )
+                    }
+
+                    composable(
+                        route = "list/{listId}",
+                        arguments = listOf(
+                            navArgument("listId") {
+                                type = NavType.IntType
+                            },
+                        ),
+                    ) { backStackEntry ->
+                        val listId = backStackEntry.arguments?.getInt("listId") ?: return@composable
+                        BookListRoute(
+                            listId = listId,
+                            onBack = { navController.popBackStack() },
+                            onOpenBook = { bookId ->
+                                navController.navigate("book/$bookId")
+                            },
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BooksTheme {
-        Greeting("Android")
     }
 }
